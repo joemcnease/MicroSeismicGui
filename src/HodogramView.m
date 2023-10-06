@@ -10,6 +10,14 @@ classdef HodogramView < handle
     miniSeedData
     pickData
 
+    hodogramDataE
+    hodogramDataN
+    hodogramDataZ
+
+    timeBounds
+    timeData
+    timeBoundsInit = false
+
     eventListener
 
   end
@@ -48,27 +56,27 @@ classdef HodogramView < handle
       if obj.hodoFigVisible
         cla(obj.ax);
 
-          idx = obj.miniSeedData.getStationIdx();
-          stationName = obj.miniSeedData.getStationList();
-          stationName = stationName(idx);
-          stationName = stationName{1};
-          stationName = stationName(1:end-4);
-      
-          dataFolder = obj.miniSeedData.getDataPath();
-      
-          %lst = obj.miniSeedData.getChannelList();
-          %val = obj.miniSeedData.getChannelIdx();
-          %channelType = lst{val};
-      
-          l_eventNum = obj.miniSeedData.getEventIdx();
-          l_eventFolders = obj.miniSeedData.getEventList();
-          l_eventFolder = l_eventFolders{l_eventNum};
-      
-          % We want all components of station (.EHZ, .EHN, .EHE)
-          eZ = strcat(dataFolder,'/',l_eventFolder,'/',stationName,'.EHZ');
-          eN = strcat(dataFolder,'/',l_eventFolder,'/',stationName,'.EHN');
-          eE = strcat(dataFolder,'/',l_eventFolder,'/',stationName,'.EHE');
-          e = {eZ,eN,eE};
+        idx = obj.miniSeedData.getStationIdx();
+        stationName = obj.miniSeedData.getStationList();
+        stationName = stationName(idx);
+        stationName = stationName{1};
+        stationName = stationName(1:end-4);
+    
+        dataFolder = obj.miniSeedData.getDataPath();
+    
+        %lst = obj.miniSeedData.getChannelList();
+        %val = obj.miniSeedData.getChannelIdx();
+        %channelType = lst{val};
+    
+        l_eventNum = obj.miniSeedData.getEventIdx();
+        l_eventFolders = obj.miniSeedData.getEventList();
+        l_eventFolder = l_eventFolders{l_eventNum};
+    
+        % We want all components of station (.EHZ, .EHN, .EHE)
+        eZ = strcat(dataFolder,'/',l_eventFolder,'/',stationName,'.EHZ');
+        eN = strcat(dataFolder,'/',l_eventFolder,'/',stationName,'.EHN');
+        eE = strcat(dataFolder,'/',l_eventFolder,'/',stationName,'.EHE');
+        e = {eZ,eN,eE};
     
         try
           % Get all station data for chose event and sort by max amplitude
@@ -90,11 +98,31 @@ classdef HodogramView < handle
             hodogramData = [hodogramData raw_data];
             mx = [mx max(raw_d)];
           end
-      
+
+          obj.hodogramDataE = hodogramData(3).d;
+          obj.hodogramDataN = hodogramData(2).d;
+          obj.hodogramDataZ = hodogramData(1).d;
+
+          temp = hodogramData(1).t;
+          t = (temp - temp(1))*86400;
+          obj.timeData = t;
+
+          if obj.timeBoundsInit      
+            obj.onUpdateTimeBounds();
+            return;
+          end
+
+          temp = hodogramData(1).t;
+          t = (temp - temp(1))*86400;
+          obj.timeBounds = [t(1) t(end)];
+          obj.timeData = t;
+
           plot3(obj.ax,hodogramData(3).d,hodogramData(2).d,hodogramData(1).d);
           xlabel(obj.ax,'EHE');
           ylabel(obj.ax,'EHN');
           zlabel(obj.ax,'EHZ');
+
+          obj.timeBoundsInit = true;
 
         catch exception
           disp(['File ' e{i} ' does not exist! Will not plot hodogram.']); 
@@ -102,6 +130,32 @@ classdef HodogramView < handle
         end
   
       end
+
+    end
+
+    function onUpdateTimeBounds(obj)
+
+      cla(obj.ax);
+
+      t = obj.timeData;
+      dE = obj.hodogramDataE;
+      dN = obj.hodogramDataN;
+      dZ = obj.hodogramDataZ;
+
+      % Find idxs in time domain
+      idx1 = find(t>obj.timeBounds(1));
+      idx2 = find(t<obj.timeBounds(2));
+      b1 = idx1(1);
+      b2 = idx2(end);
+
+      dE = dE(b1:b2);
+      dN = dN(b1:b2);
+      dZ = dZ(b1:b2);     
+
+      plot3(obj.ax,dE,dN,dZ);
+      xlabel(obj.ax,'EHE');
+      ylabel(obj.ax,'EHN');
+      zlabel(obj.ax,'EHZ');
 
     end
 
@@ -124,6 +178,13 @@ classdef HodogramView < handle
       close(obj.hodoFig);
       pause(0.01);
       obj.hodoFigVisible = false;
+
+    end
+
+    function setTimeBounds(obj,timeBounds)
+
+      obj.timeBounds = timeBounds;
+      obj.onUpdateTimeBounds();
 
     end
 
