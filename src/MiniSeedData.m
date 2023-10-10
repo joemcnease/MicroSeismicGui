@@ -33,6 +33,8 @@ classdef MiniSeedData < handle
     % Filtering --- poly detrend, n, bandpass, lowf, highf
     filterParams = {false,        0, false,    0,    300}
 
+    ampFactor = 1
+
   end
 
   events (NotifyAccess = private)
@@ -231,6 +233,12 @@ classdef MiniSeedData < handle
 
     end
 
+    function setAmpFactor(obj,ampFactor)
+
+      obj.ampFactor = ampFactor;
+
+    end
+
     function efld = getDataPath(obj)
 
       temp = obj.dataPath;
@@ -274,6 +282,12 @@ classdef MiniSeedData < handle
         for i=1:length(wvfs)
           % wvfs(i).d = bandpass(wvfs(i).d,[lowf highf],fs);
           wvfs(i).d = filtering(wvfs(i).d,fs,lowf,highf);
+        end
+      end
+
+      if obj.ampFactor ~= 1
+        for i=1:length(wvfs)
+          wvfs(i).d = wvfs(i).d * obj.ampFactor;
         end
       end
 
@@ -324,6 +338,12 @@ classdef MiniSeedData < handle
     function cidx = getChannelIdx(obj)
 
       cidx = obj.channelIdx;
+
+    end
+
+    function afac = getAmpFactor(obj)
+
+      afac = obj.ampFactor;
 
     end
 

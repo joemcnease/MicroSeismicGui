@@ -53,6 +53,8 @@ classdef EventView < handle
       yticks(obj.ax,[]);
       yticklabels(obj.ax,[]);
       fontsize(obj.ax,10,'points');
+      
+      obj.selectedLines = false(1,elen);
     
     end
 
@@ -64,9 +66,7 @@ classdef EventView < handle
 
       obj.wfLines = [];
 
-      thisEvent = obj.miniSeedData.getEventList();
-      thisEvent = thisEvent{obj.miniSeedData.getEventIdx()};
-      disp(thisEvent);
+      thisEvent = obj.miniSeedData.getEventFolder();
 
       cla(obj.ax);
       d = obj.miniSeedData.getWaveforms();
@@ -76,7 +76,7 @@ classdef EventView < handle
       offset = 0;
       doff = 500;
 
-      if not(strcmp(thisEvent,obj.lastEvent))
+      if thisEvent ~= obj.lastEvent
         obj.selectedLines = false(1,elen);
       end
 

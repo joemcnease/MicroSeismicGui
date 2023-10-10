@@ -34,6 +34,16 @@ classdef SpectrumView < handle
   methods(Access = protected)
 
     function setup(obj)
+
+      pos = [0.79 0.075 0.18 0.4];
+      obj.ax = axes(obj.fig,'Position',pos);
+      yticks(obj.ax,[]);
+      yticklabels(obj.ax,[]);
+      xticks(obj.ax,[]);
+      xticklabels(obj.ax,[]);
+      fontsize(obj.ax,10,'points');
+
+      obj.specFigVisible = true;
     
     end
 
@@ -44,7 +54,6 @@ classdef SpectrumView < handle
     function onEventDataChanged(obj,~,~)
 
       if obj.specFigVisible
-        disp('plotting spectrum')
         cla(obj.ax);
   
         % Plot selected channel in lower plot
@@ -66,7 +75,7 @@ classdef SpectrumView < handle
   
         plot(obj.ax,f,P1);
         xlim(obj.ax,[0 f(end)]);
-        ylabel(obj.ax,'Amplitude Spectrum |P1(f)|');
+        ylabel(obj.ax,'Amplitude Spectrum'); % |P1(f)|');
         xlabel(obj.ax,'Frequency [Hz]');
   
       end
@@ -79,8 +88,11 @@ classdef SpectrumView < handle
 
     function createNewFigure(obj)
 
-      obj.specFig = figure;
-      obj.ax = axes(obj.specFig);
+      % obj.specFig = figure;
+      % obj.ax = axes(obj.specFig);
+
+      %pos = [0.8 0.075 0.175 0.4];
+      %obj.ax = axes(obj.fig,'Position',pos);
       obj.specFigVisible = true;
 
       obj.onEventDataChanged();
@@ -89,9 +101,9 @@ classdef SpectrumView < handle
 
     function deleteFigure(obj)
 
-      close(obj.specFig);
-      pause(0.01);
-      obj.specFigVisible = false;
+      %close(obj.specFig);
+      %pause(0.01);
+      %obj.specFigVisible = false;
 
     end
 

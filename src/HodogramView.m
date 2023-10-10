@@ -43,7 +43,18 @@ classdef HodogramView < handle
 
     function setup(obj)
     
+      pos = [0.79 0.535 0.18 0.425];
+      obj.ax = axes(obj.fig,'Position',pos);
+      yticks(obj.ax,[]);
+      yticklabels(obj.ax,[]);
+      xticks(obj.ax,[]);
+      xticklabels(obj.ax,[]);
+      fontsize(obj.ax,10,'points');
 
+      % Turning on disables ButtonDownFcn in Event/Station plots????
+      % rotate3d(obj.ax,'on');
+
+      obj.hodoFigVisible = true;
 
     end
 
@@ -165,8 +176,11 @@ classdef HodogramView < handle
 
     function createNewFigure(obj)
 
-      obj.hodoFig = figure;
-      obj.ax = axes(obj.hodoFig);
+      % obj.hodoFig = figure;
+      % obj.ax = axes(obj.hodoFig);
+
+      %pos = [0.8 0.525 0.175 0.45];
+      %obj.ax = axes(obj.fig,'Position',pos);
       obj.hodoFigVisible = true;
 
       obj.onEventDataChanged();
@@ -175,9 +189,9 @@ classdef HodogramView < handle
 
     function deleteFigure(obj)
 
-      close(obj.hodoFig);
-      pause(0.01);
-      obj.hodoFigVisible = false;
+      %close(obj.hodoFig);
+      %pause(0.01);
+      %obj.hodoFigVisible = false;
 
     end
 

@@ -44,7 +44,10 @@ classdef StationView < handle
 
     function setup(obj)
     
-      obj.ax = axes(obj.fig,'Position',[0.28 0.075 0.695 0.17]);
+      % Figure position/dimensions
+      pos = [0.235 0.075 0.495 0.17];
+
+      obj.ax = axes(obj.fig,'Position',pos);
       yticks(obj.ax,[]);
       yticklabels(obj.ax,[]);
       fontsize(obj.ax,10,'points');
@@ -75,7 +78,7 @@ classdef StationView < handle
       hold(obj.ax,'on');
   
       annText = ['Channel: ' d.name];
-      text(obj.ax,0.76,0.87,annText,'Units','normalized','FontSize',15);
+      text(obj.ax,0.66,0.87,annText,'Units','normalized','FontSize',15);
   
       xlabel(obj.ax,"Time [s]");
       xl = [obj.miniSeedData.tmin obj.miniSeedData.tmax];

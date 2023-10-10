@@ -1,3 +1,0 @@
-Pick file created on 05-Oct-2023 19:29:40
-Pick file last modified on 05-Oct-2023 19:29:40
-Event           Network         Station         Channel         Location        RelativeTime    AbsoluteTime    Phase          

@@ -1,9 +1,9 @@
 % Run GUI
 function RunMicroSeimsicGUI
 
-  set(0, 'DefaultAxesFontSize', 12);
+  set(0, 'DefaultAxesFontSize', 10);
 
-  fig = figure('Position',[300 100 1400 800],'Name','MicroSeismicGUI',...
+  fig = figure('Position',[100 150 1600 800],'Name','MicroSeismicGUI',...
               'MenuBar','none','NumberTitle','off');
 
   % Models
